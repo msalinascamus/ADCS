@@ -52,6 +52,7 @@ class btReceiver(object):
         i = 0
         k = 0
         sz = 13
+        self.reset()
         while (k < 2*sz):
             byte = self.btSocket.recv(1)
             self.packet[i] = ord(byte)
@@ -62,7 +63,8 @@ class btReceiver(object):
                 if (chksm == self.packet[sz-1] and chksm !=0):
                     self.DEBUG_PRINT("info", "frame received = "+str(self.packet))
                     p = struct.pack('BBBBBBBBBBBBB', self.packet[0],self.packet[1],self.packet[2],self.packet[3],self.packet[4],self.packet[5],self.packet[6],self.packet[7],self.packet[8],self.packet[9],self.packet[10],self.packet[11],self.packet[12])
-                    print struct.unpack("fffB", p)
+                    self.packet = struct.unpack("fffB", p)
+                    #print self.packet
                     return True
                 else:
                     for j in range(0,sz-1): self.packet[j] = self.packet[j+1] #Shift Left packet
